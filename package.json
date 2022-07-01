@@ -1,0 +1,21 @@
+{
+  "name": "forkify",
+  "version": "1.0.0",
+  "description": "This is the result of my practice",
+  "main": "index.html",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "Abhishek Nayak",
+  "license": "ISC",
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.0.0-beta.2",
+    "sass": "^1.53.0"
+  },
+  "dependencies": {
+    "core-js": "^3.23.3",
+    "parcel": "^2.0.0-beta.2",
+    "regenerator-runtime": "^0.13.9"
+  }
+}
