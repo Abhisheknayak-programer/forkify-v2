@@ -4,6 +4,7 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import searchViews from './views/searchViews';
 import resultsView from './views/resultsView';
+import paginationView from './views/paginationView';
 
 const controlRecipes = async function () {
   try {
@@ -40,7 +41,10 @@ const controlSearchResults = async function () {
     await model.loadSearchResults(query);
 
     // 3. Rendering the results
-    resultsView.render(model.state.search.results);
+    resultsView.render(model.getSearchResultsPage());
+
+    // 4. Render Pagination Buttons
+    paginationView.render(model.state.search);
   } catch (error) {
     recipeViews.renderError(
       `💥Error fetching recipe please try again later! 💥`
@@ -48,9 +52,21 @@ const controlSearchResults = async function () {
   }
 };
 
+const controlPagination = function (gotoPage) {
+  model.state.search.page = gotoPage;
+
+  // 1. Rendering New the results
+  resultsView.render(model.getSearchResultsPage(gotoPage));
+
+  // 2. Render New Pagination Buttons
+  paginationView.render(model.state.search);
+};
+
+
 const init = function () {
   recipeViews.addHandlerRender(controlRecipes);
   searchViews.addHandlerSearch(controlSearchResults);
+  paginationView.addHandlerClick(controlPagination);
 };
 
 init();

@@ -6,6 +6,8 @@ export const state = {
   search: {
     query: '',
     results: [],
+    resultsPerPage: config.RESULTS_PER_PAGE,
+    page: 1,
   },
 };
 
@@ -38,9 +40,7 @@ export const loadSearchResults = async function (query) {
   try {
     state.search.query = query;
 
-    const data = await helpers.getJSON(
-      `https://forkify-api.herokuapp.com/api/v2/recipes?search=${query}`
-    );
+    const data = await helpers.getJSON(`${config.API_URL}?search=${query}`);
 
     const AllRecipes = data.data.recipes;
     state.search.results = AllRecipes.map(rec => {
@@ -57,4 +57,11 @@ export const loadSearchResults = async function (query) {
   }
 };
 
-loadSearchResults('pizza');
+export const getSearchResultsPage = function (page = state.search.page) {
+  state.search.page = page;
+
+  let start = (page - 1) * state.search.resultsPerPage;
+  let end = page * state.search.resultsPerPage;
+
+  return state.search.results.slice(start, end);
+};
