@@ -3,6 +3,10 @@ import * as helpers from './views/helpers';
 
 export const state = {
   recipe: {},
+  search: {
+    query: '',
+    results: [],
+  },
 };
 
 export const loadRecipe = async function (Recipe_id) {
@@ -26,5 +30,31 @@ export const loadRecipe = async function (Recipe_id) {
     // console.log(state.recipe);
   } catch (error) {
     console.log(error);
+    throw error;
   }
 };
+
+export const loadSearchResults = async function (query) {
+  try {
+    state.search.query = query;
+
+    const data = await helpers.getJSON(
+      `https://forkify-api.herokuapp.com/api/v2/recipes?search=${query}`
+    );
+
+    const AllRecipes = data.data.recipes;
+    state.search.results = AllRecipes.map(rec => {
+      return {
+        id: rec.id,
+        title: rec.title,
+        publisher: rec.publisher,
+        image: rec.image_url,
+      };
+    });
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+loadSearchResults('pizza');

@@ -2,7 +2,8 @@ import * as model from './model';
 import recipeViews from './views/recipeViews';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-const RecipeContainer = document.querySelector('.recipe');
+import searchViews from './views/searchViews';
+import resultsView from './views/resultsView';
 
 const controlRecipes = async function () {
   try {
@@ -26,8 +27,30 @@ const controlRecipes = async function () {
   }
 };
 
+const controlSearchResults = async function () {
+  try {
+    resultsView.renderSpinner();
+
+    // 1. Get Search Query and Clear Input Field
+    const query = searchViews.getQuery();
+    if (!query) return;
+    searchViews.clearInput();
+
+    // 2. Load Search Results
+    await model.loadSearchResults(query);
+
+    // 3. Rendering the results
+    resultsView.render(model.state.search.results);
+  } catch (error) {
+    recipeViews.renderError(
+      `💥Error fetching recipe please try again later! 💥`
+    );
+  }
+};
+
 const init = function () {
   recipeViews.addHandlerRender(controlRecipes);
+  searchViews.addHandlerSearch(controlSearchResults);
 };
 
 init();

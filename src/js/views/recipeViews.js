@@ -1,29 +1,9 @@
 import icons from 'url:../../img/icons.svg';
 import { Fraction } from 'fractional';
+import View from './View';
 
-class RecipeView {
+class RecipeView extends View {
   parentElement = document.querySelector('.recipe');
-
-  render(data) {
-    this.data = data;
-    this.generateMarkup();
-    this.clear();
-    this.parentElement.insertAdjacentHTML('afterbegin', this.generateMarkup());
-  }
-
-  clear() {
-    this.parentElement.innerHTML = '';
-  }
-
-  renderSpinner() {
-    let markup = `<div class="spinner">
-                    <svg>
-                    <use href="${icons}#icon-loader"></use>
-                    </svg>
-                </div>`;
-    this.clear();
-    this.parentElement.insertAdjacentHTML('afterbegin', markup);
-  }
 
   generateMarkup() {
     return `
@@ -70,9 +50,7 @@ class RecipeView {
       </div>
 
       <div class="recipe__user-generated">
-        <svg>
-          <use href="${icons}#icon-user"></use>
-        </svg>
+        
       </div>
       <button class="btn--round">
         <svg class="">
@@ -129,19 +107,6 @@ class RecipeView {
                   ${ing.description}
                 </div>
               </li>`;
-  }
-
-  renderError(message) {
-    let errorHtml = ` <div class="error">
-                            <div>
-                                <svg>
-                                    <use href="s${icons}#icon-alert-triangle"></use>
-                                </svg>
-                            </div>
-                            <p>${message}</p>
-                        </div>`;
-    this.clear();
-    this.parentElement.insertAdjacentHTML('afterbegin', errorHtml);
   }
 }
 
