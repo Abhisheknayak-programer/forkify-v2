@@ -96,8 +96,26 @@ const controlFetchLocalStorageBookmarks = function () {
   bookmarksView.render(model.state.bookmarks);
 };
 
-const controlAddRecipe = function (newRecipe) {
-  console.log(newRecipe);
+const controlAddRecipe = async function (newRecipe) {
+  try {
+    addRecipeView.renderSpinner();
+
+    await model.uploadRecipe(newRecipe);
+
+    // RENDER THE UPLOADED RECIPE
+    recipeViews.render(model.state.recipe);
+
+    // RENDER BOOKMARK VIEW
+    bookmarksView.render(model.state.bookmarks);
+
+    // UPDATING THE HASH IN THE WINDOW
+    window.history.pushState(null, '', `#${model.state.recipe.id}`);
+
+    // CLOSE THE UPLOAD MODAL
+    addRecipeView.toggleWindow();
+  } catch (err) {
+    addRecipeView.renderError(err.message);
+  }
 };
 
 const init = function () {
