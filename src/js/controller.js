@@ -15,6 +15,9 @@ const controlRecipes = async function () {
     // RENDERING THE SPINNER
     recipeViews.renderSpinner();
 
+    // UPDATE THE SELECTED RECIPE WITH ACTIVE CLASS
+    resultsView.update(model.getSearchResultsPage());
+
     // 1. Loading Recipe
     await model.loadRecipe(Recipe_id);
     const recipe = model.state.recipe;
@@ -62,9 +65,18 @@ const controlPagination = function (gotoPage) {
   paginationView.render(model.state.search);
 };
 
+const controlServings = function (newServings) {
+  // Updating the recipe servings in the state
+  model.updateServings(newServings);
+
+  // Update the recipe view
+  // recipeViews.render(model.state.recipe);
+  recipeViews.update(model.state.recipe);
+};
 
 const init = function () {
   recipeViews.addHandlerRender(controlRecipes);
+  recipeViews.addHandlerUpdateServings(controlServings);
   searchViews.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
 };

@@ -8,9 +8,37 @@ export default class View {
       return this.renderError(`Unable to find the recipe`);
 
     this.data = data;
-    this.generateMarkup();
+    const markup = this.generateMarkup();
     this.clear();
-    this.parentElement.insertAdjacentHTML('afterbegin', this.generateMarkup());
+    this.parentElement.insertAdjacentHTML('afterbegin', markup);
+  }
+
+  update(data) {
+    this.data = data;
+    const newMarkup = this.generateMarkup();
+
+    const newDOM = document.createRange().createContextualFragment(newMarkup);
+    const newElements = Array.from(newDOM.querySelectorAll('*'));
+    const currentElements = Array.from(
+      this.parentElement.querySelectorAll('*')
+    );
+
+    newElements.forEach((newEl, ind) => {
+      const curEL = currentElements[ind];
+
+      if (
+        !newEl.isEqualNode(curEL) &&
+        newEl.firstChild?.nodeValue.trim() !== ''
+      ) {
+        curEL.textContent = newEl.textContent;
+      }
+
+      if (!newEl.isEqualNode(curEL)) {
+        Array.from(newEl.attributes).forEach(attribute => {
+          curEL.setAttribute(attribute.name, attribute.value);
+        });
+      }
+    });
   }
 
   clear() {
@@ -31,7 +59,7 @@ export default class View {
     let errorHtml = ` <div class="error">
                             <div>
                                 <svg>
-                                    <use href="s${icons}#icon-alert-triangle"></use>
+                                    <use href="${icons}#icon-alert-triangle"></use>
                                 </svg>
                             </div>
                             <p>${message}</p>
